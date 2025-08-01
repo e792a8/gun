@@ -1,0 +1,7 @@
+gun - git commit and run, and git commit
+
+Simply git add and git commit before running your command and git add and git
+commit after the command finishes, adds recording some execution data and
+tracking the command output into a directory, which is also exported as RUNDIR
+for the command to use.
+

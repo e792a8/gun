@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+cmdline="$@"
+start_date=$(date)
+start_time=$(date +%s)
+rundir="run/$start_time"
+
+git add .
+git commit --allow-empty -m "start: $rundir" -m "cmd: $cmdline"
+commit=$(git rev-parse HEAD)
+
+mkdir -p "$rundir"
+cat >> "$rundir/_run_" <<EOF
+Cmd: $cmdline
+Commit: $commit
+Start: $start_date
+EOF
+
+export RUNDIR="$rundir"
+"$@" |& tee "$rundir/_out_"
+
+exit_code=$?
+stop_time=$(date +%s)
+stop_date=$(date)
+exec_time=$(($stop_time - $start_time))
+
+cat >> "$rundir/_run_" <<EOF
+Finish: $stop_date
+Execution: $exec_time
+Exit code: $exit_code
+EOF
+
+git add .
+git commit --allow-empty -m "finish: $rundir" -m "cmd: $cmdline"
+
