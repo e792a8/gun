@@ -2,7 +2,8 @@
 
 cmdline="$@"
 start_date=$(date)
-start_time=$(date +%s)
+start_time=$(date '+%Y%m%d%H%M%S')
+start_ts=$(date '+%s')
 rundir="run/$start_time"
 
 mkdir -p "$rundir"
@@ -20,9 +21,9 @@ export RUNDIR="$rundir"
 "$@" |& tee "$rundir/_out_"
 
 exit_code=$?
-stop_time=$(date +%s)
+stop_ts=$(date '+%s')
 stop_date=$(date)
-exec_time=$(($stop_time - $start_time))
+exec_time=$(($stop_ts - $start_ts))
 
 cat >> "$rundir/_run_" <<EOF
 Finish: $stop_date
